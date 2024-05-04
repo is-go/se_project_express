@@ -55,16 +55,16 @@ const updateItem = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  const { itemId } = req.param;
+  // const { itemId } = req.param;
 
-  console.log(itemID);
-  ClothingItem.findByIdAndDelete(itemId)
+  // console.log(itemId);
+  ClothingItem.findByIdAndDelete(req.param.itemId)
     .orFail()
     .then((item) => res.status(204).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: err.message });
+        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
       }
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: err.message });

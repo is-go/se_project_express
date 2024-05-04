@@ -9,9 +9,9 @@ const {
 } = require("../controllers/clothingitems");
 
 router.get("/", getItems);
-router.put("/:itemID", updateItem);
+router.put("/:itemId", updateItem);
 router.post("/", createItem);
-router.delete("/:itemID", deleteItem);
+router.delete("/:itemId", deleteItem);
 
 router.put("/:itemId/likes", likeItem);
 router.delete("/:itemId/likes", dislikeItem);
