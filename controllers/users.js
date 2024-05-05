@@ -16,7 +16,7 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
       }
       return res.status(SERVER_ERROR).send({ message: err.message });
     });
@@ -35,9 +35,10 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  const { userId } = req.body;
+  const { userid } = req.params;
 
-  User.findById({ userId })
+  console.log(req.params);
+  User.findById(userid)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {

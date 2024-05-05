@@ -4,6 +4,7 @@ const {
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
   SERVER_ERROR,
+  FORBIDDEN_ERROR,
 } = require("../utils/errors");
 
 /////////////////////////////////////// C.R.U.D ////////////////////////////////////////////////////
@@ -12,7 +13,10 @@ const {
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
 
-  ClothingItem.create({ name, weather, imageUrl })
+  // Use req.user._id as the owner of the clothing item
+  const owner = req.user._id;
+
+  ClothingItem.create({ name, weather, imageUrl, owner })
     .then((item) => {
       console.log("Item created:", item);
       res.status(201).send(item);
@@ -39,7 +43,7 @@ const getItems = (req, res) => {
 };
 
 const updateItem = (req, res) => {
-  const { itemId } = req.param;
+  const { itemId } = req.params.itemId;
   const { imageUrl } = req.body;
 
   ClothingItem.findOneAndUpdate(itemId, { $set: { imageUrl } })
@@ -55,22 +59,34 @@ const updateItem = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  // const { itemId } = req.param;
-
-  // console.log(itemId);
-  ClothingItem.findByIdAndDelete(req.params.itemId)
+  ClothingItem.findById(req.params.itemId)
     .orFail()
-    .then((item) => res.status(204).send(item))
+    .then((item) => {
+      if (!item.owner.equals(req.user._id)) {
+        res.status(FORBIDDEN_ERROR).send({
+          message: "The user is trying to remove the card of another user",
+        });
+        return;
+      }
+
+      ClothingItem.deleteOne({ _id: req.params.itemId })
+        .orFail()
+        .then(() => res.status(200).send({ message: "Item deleted" }));
+    })
     .catch((err) => {
       console.error(err);
+
       if (err.name === "DocumentNotFoundError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
+        return res.status(NOT_FOUND_ERROR).send({
+          message: " There is no clothing item with the requested id",
+        });
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid ID" });
       }
-
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
