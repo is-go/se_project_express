@@ -1,6 +1,6 @@
 # WTWR (What to Wear?): Back End
 
-The first iteration of the What to Wear Server. This server is in developmental stages that will allow users and items to be added to the server.
+The first iteration of the What to Wear server. This server is in developmental stages that will allow users and items to be added to the server.
 
 ## Code Structure
 
