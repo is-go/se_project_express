@@ -1,8 +1,13 @@
 const express = require("express");
+
 const mongoose = require("mongoose");
+
 mongoose.set("strictQuery", false);
+
 const mainRouter = require("./routes/index");
+
 const app = express();
+
 const { PORT = 3001 } = process.env;
 
 mongoose

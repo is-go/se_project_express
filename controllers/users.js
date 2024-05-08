@@ -5,9 +5,6 @@ const {
   SERVER_ERROR,
 } = require("../utils/errors");
 
-/////////////////////////////////////// C.R.U.D ////////////////////////////////////////////////////
-////////////////////////////// Create, Read, Update, Delete ////////////////////////////////////////
-
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
 
@@ -18,19 +15,23 @@ const createUser = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({
+        message: "Sorry, an error has occurred on the server. Try again.",
+      });
     });
 };
 
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.status(200).send(users))
+    .then((users) => res.send(users))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR).send({ message: err.message });
       }
       console.error(err);
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({
+        message: "Sorry, an error has occurred on the server. Try again.",
+      });
     });
 };
 
@@ -40,7 +41,7 @@ const getUserById = (req, res) => {
   console.log(req.params);
   User.findById(userid)
     .orFail()
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR).send({ message: err.message });
@@ -49,7 +50,9 @@ const getUserById = (req, res) => {
         return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
       }
       console.error(err);
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({
+        message: "Sorry, an error has occurred on the server. Try again.",
+      });
     });
 };
 
