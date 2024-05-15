@@ -5,12 +5,13 @@ const {
   NOT_FOUND_ERROR,
   SERVER_ERROR,
   FORBIDDEN_ERROR,
+  CONFLICT_ERROR,
+  UNAUTHORIZED_ERROR,
 } = require("../utils/errors");
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
 
-  // Use req.user._id as the owner of the clothing item
   const owner = req.user._id;
 
   ClothingItem.create({ name, weather, imageUrl, owner })
