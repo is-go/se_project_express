@@ -8,7 +8,6 @@ const {
   SERVER_ERROR,
   CONFLICT_ERROR,
   UNAUTHORIZED_ERROR,
-  FORBIDDEN_ERROR,
 } = require("../utils/errors");
 
 const createUser = (req, res) => {
@@ -26,30 +25,30 @@ const createUser = (req, res) => {
         });
       }
 
-      return bcrypt.hash(password, 10).then((hash) => {
-        return User.create({ name, avatar, email, password: hash }).then(
-          (newUser) => {
-            const payload = newUser.toObject();
-            delete payload.password;
-            res.status(201).send({ data: payload });
-          },
-        );
-      });
+      return bcrypt.hash(password, 10).then((hash) =>
+        User.create({ name, avatar, email, password: hash }).then((newUser) => {
+          const payload = newUser.toObject();
+          delete payload.password;
+          return res.status(201).send({ data: payload });
+        }),
+      );
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
-      } else if (err.code === 11000) {
+      }
+      if (err.code === 11000) {
         return res.status(CONFLICT_ERROR).send({
           message: "An email address that already exists on the server",
         });
-      } else {
-        return res
-          .status(SERVER_ERROR)
-          .send({ message: "An error has occurred on the server" });
       }
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
+
+  return null;
 };
 
 const getUsers = (req, res) => {

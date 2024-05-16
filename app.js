@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", false);
 
+const cors = require("cors");
+
 const mainRouter = require("./routes/index");
 
 const app = express();
 
 const { PORT = 3001 } = process.env;
-
-const cors = require("cors");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
