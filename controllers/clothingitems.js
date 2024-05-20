@@ -45,20 +45,30 @@ const deleteItem = (req, res) => {
   ClothingItem.findById(req.params.itemId)
     .orFail()
     .then((item) => {
-      if (!item.owner.equals(req.user._id)) {
-        res.status(FORBIDDEN_ERROR).send({
-          message: "The user is trying to remove another users item.",
+      // Ensure owner and the user ID are both strings for comparison
+      const itemOwnerId = item.owner.toString();
+      const userId = req.user._id.toString();
+
+      if (itemOwnerId !== userId) {
+        return res.status(FORBIDDEN_ERROR).send({
+          message: "The user is trying to remove the card of another user",
         });
-        return;
       }
 
-      ClothingItem.deleteOne({ _id: req.params.itemId })
-        .orFail()
-        .then(() => res.send({ message: "Item deleted" }));
+      // If the user is the owner; delete
+      return ClothingItem.deleteOne({ _id: req.params.itemId })
+        .then(() => {
+          res.send({ message: "Item deleted" });
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(SERVER_ERROR).send({
+            message: "An error has occurred on the server",
+          });
+        });
     })
     .catch((err) => {
       console.error(err);
-
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR).send({
           message: "Item not found.",
@@ -66,7 +76,7 @@ const deleteItem = (req, res) => {
       }
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST_ERROR).send({
-          message: "Invalid, cannot delete item.",
+          message: "Invalid item ID.",
         });
       }
       return res.status(SERVER_ERROR).send({

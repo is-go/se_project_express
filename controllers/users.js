@@ -51,41 +51,6 @@ const createUser = (req, res) => {
   return null;
 };
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: err.message });
-      }
-      console.error(err);
-      return res.status(SERVER_ERROR).send({
-        message: "Sorry, an error has occurred on the server. Try again.",
-      });
-    });
-};
-
-const getUserById = (req, res) => {
-  const { userid } = req.params;
-
-  console.log(req.params);
-  User.findById(userid)
-    .orFail()
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: err.message });
-      }
-      if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
-      }
-      console.error(err);
-      return res.status(SERVER_ERROR).send({
-        message: "Sorry, an error has occurred on the server. Try again.",
-      });
-    });
-};
-
 const userLogin = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -146,6 +111,7 @@ const updateUser = (req, res) => {
     { name, avatar },
     { new: true, runValidators: true },
   )
+    .orFail()
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       console.error(err);
@@ -165,9 +131,7 @@ const updateUser = (req, res) => {
 };
 
 module.exports = {
-  getUsers,
   createUser,
-  getUserById,
   userLogin,
   updateUser,
   getCurrentUser,
