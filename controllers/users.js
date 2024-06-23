@@ -133,7 +133,6 @@ const updateUser = (req, res) => {
 const updateUserProfile = (req, res) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
-
   User.findByIdAndUpdate(
     userId,
     { name, avatar },
