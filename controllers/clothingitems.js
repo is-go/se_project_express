@@ -94,7 +94,7 @@ const likeItem = (req, res) => {
     { new: true },
   )
     .orFail()
-    .then((item) => res.send({ data: item }))
+    .then((item) => res.json(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
@@ -123,7 +123,7 @@ const dislikeItem = (req, res) => {
     { new: true },
   )
     .orFail()
-    .then(() => res.send({ data: itemId }))
+    .then((item) => res.json(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
