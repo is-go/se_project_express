@@ -47,7 +47,6 @@ const deleteItem = (req, res) => {
     .then((item) => {
       const itemOwnerId = item.owner.toString();
       const userId = req.user._id.toString();
-
       if (itemOwnerId !== userId) {
         return res.status(FORBIDDEN_ERROR).send({
           message: "The user is trying to remove the card of another user",
