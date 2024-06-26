@@ -45,7 +45,6 @@ const deleteItem = (req, res) => {
   ClothingItem.findById(req.params.itemId)
     .orFail()
     .then((item) => {
-      // Ensure owner and the user ID are both strings for comparison
       const itemOwnerId = item.owner.toString();
       const userId = req.user._id.toString();
 
@@ -55,7 +54,6 @@ const deleteItem = (req, res) => {
         });
       }
 
-      // If the user is the owner; delete
       return ClothingItem.deleteOne({ _id: req.params.itemId })
         .then(() => {
           res.send({ message: "Item deleted" });

@@ -106,13 +106,14 @@ const getCurrentUser = (req, res) => {
 const updateUserProfile = (req, res) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
+
   User.findByIdAndUpdate(
     userId,
     { name, avatar },
     { new: true, runValidators: true },
   )
     .orFail()
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
 
