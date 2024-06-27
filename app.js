@@ -12,6 +12,8 @@ const app = express();
 
 const { PORT = 3001 } = process.env;
 
+const { errors } = require("celebrate");
+
 const errorHandler = require("./middlewares/error-handler");
 
 mongoose
@@ -20,6 +22,8 @@ mongoose
     console.log("Connected to DB");
   })
   .catch(console.error);
+  
+app.use(errors());
 
 app.use(errorHandler);
 
