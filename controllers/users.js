@@ -45,6 +45,8 @@ const createUser = (req, res, next) => {
       }
       return next(err);
     });
+
+  return null; 
 };
 
 const userLogin = (req, res, next) => {
@@ -58,7 +60,7 @@ const userLogin = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.send({ token });
+      return res.send({ token });
     })
     .catch((err) => {
       console.error(err);
@@ -70,6 +72,8 @@ const userLogin = (req, res, next) => {
       }
       return next(err);
     });
+
+  return null;
 };
 
 const getCurrentUser = (req, res, next) => {
@@ -85,6 +89,8 @@ const getCurrentUser = (req, res, next) => {
       }
       return next(err);
     });
+
+  return null;
 };
 
 const updateUserProfile = (req, res, next) => {
@@ -107,6 +113,8 @@ const updateUserProfile = (req, res, next) => {
       }
       return next(err);
     });
+
+  return null;
 };
 
 module.exports = {
