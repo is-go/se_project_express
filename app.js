@@ -25,11 +25,18 @@ mongoose
 // Request logging middleware
 app.use(requestLogger);
 
-// Middleware for parsing JSON bodies
+// Middleware for parsing json
 app.use(express.json());
 
 // CORS middleware
 app.use(cors());
+
+// Temp test code
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 
 // Routes
 app.use("/", mainRouter);
