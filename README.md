@@ -1,7 +1,5 @@
 # WTWR (What to Wear?): Back End
-![](./src/assets/Logo.svg)
-
-Final stage of the WTWR project were users can have an array of clothing options dependent on the the weather conditions. Users can now register,login, like, and unlike items! Onth
+Final stage of the WTWR project server were users can have an array of clothing options dependent on the the weather conditions. Users can now register,login, like, and unlike items! Onth
 
 ## Deployment Links
 - **Frontend Application**: [https://wtwr-isaic.catcher.ru]

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 
 const mongoose = require("mongoose");
@@ -5,8 +7,8 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 const cors = require("cors");
 const { errors } = require("celebrate");
-
-require("dotenv").config();
+const limiter = require("./middlewares/limiter");
+const helmetConfig = require("./middlewares/helmet");
 
 const mainRouter = require("./routes/index");
 const errorHandler = require("./middlewares/error-handler");
@@ -21,6 +23,12 @@ mongoose
     console.log("Connected to DB");
   })
   .catch(console.error);
+
+// Limiter for security
+app.use(limiter);
+
+// Helmet for added security
+app.use(helmetConfig);
 
 // Request logging middleware
 app.use(requestLogger);
